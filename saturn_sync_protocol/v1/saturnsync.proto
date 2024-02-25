@@ -6,7 +6,7 @@ syntax = "proto3";
 package saturn_sync_protocol.v1;
 
 service TaskService {
-  rpc ExecuteActions(ExecuteActionsRequest) returns (ExecuteActionsReply) {}
+  rpc ExecuteActions(ExecuteActionsRequest) returns (ExecuteActionsResponse) {}
   rpc ExecuteFilters(ExecuteFiltersRequest) returns (ExecuteFiltersResponse) {}
   rpc ListTasks(ListTasksRequest) returns (ListTasksResponse) {}
   rpc OnPrClosed(OnPrClosedRequest) returns (OnPrClosedResponse) {}
@@ -20,7 +20,7 @@ message ExecuteActionsRequest {
   Context context = 3;
 }
 
-message ExecuteActionsReply {
+message ExecuteActionsResponse {
   optional string error = 1;
 }
 
