@@ -20,7 +20,7 @@ message ExecuteActionsRequest {
   Context context = 3;
 }
 
-message ExecuteActionsResponse {
+message ExecuteActionsReply {
   optional string error = 1;
 }
 
