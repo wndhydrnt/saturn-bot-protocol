@@ -1,0 +1,18 @@
+[tool.poetry]
+name = "saturn-sync-protocol"
+version = "0.0.0"
+description = "gRPC protocol used by remote tasks of saturn-sync."
+authors = ["Markus Meyer <hydrantanderwand@gmail.com>"]
+license = "MPL-2.0"
+readme = "README.md"
+packages = [
+  { include = "saturn_sync_protocol" },
+]
+
+[tool.poetry.dependencies]
+python = "^3.9"
+grpcio = "^1.60.1"
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"
