@@ -5,6 +5,9 @@ on:
 
 jobs:
   lint-protos:
-    - uses: actions/checkout@b4ffde65f46336ab88eb53be808477a3936bae11 # v4
-    - uses: bufbuild/buf-setup-action@v1
-    - uses: bufbuild/buf-lint-action@v1
+    steps:
+      - uses: actions/checkout@b4ffde65f46336ab88eb53be808477a3936bae11 # v4
+      - uses: bufbuild/buf-setup-action@v1
+      - uses: bufbuild/buf-lint-action@v1
+        with:
+          input: saturn_sync_protocol/v1
