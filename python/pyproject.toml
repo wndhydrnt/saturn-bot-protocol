@@ -5,6 +5,11 @@ description = "gRPC protocol used by remote tasks of saturn-sync."
 authors = ["Markus Meyer <hydrantanderwand@gmail.com>"]
 license = "MPL-2.0"
 readme = "README.md"
+repository = "https://github.com/wndhydrnt/saturn-sync-protocol"
+classifiers = [
+    "Development Status :: 4 - Beta",
+    "License :: OSI Approved :: Mozilla Public License 2.0 (MPL 2.0)"
+]
 packages = [
   { include = "saturn_sync_protocol" },
 ]
@@ -12,6 +17,9 @@ packages = [
 [tool.poetry.dependencies]
 python = "^3.9"
 grpcio = "^1.60.1"
+
+[tool.poetry.urls]
+Changelog = "https://github.com/wndhydrnt/saturn-sync-protocol/blob/main/python/CHANGELOG.md"
 
 [build-system]
 requires = ["poetry-core"]
