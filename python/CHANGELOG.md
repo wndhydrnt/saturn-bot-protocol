@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.2.0](https://github.com/wndhydrnt/saturn-sync-protocol/compare/v0.1.0...v0.2.0) (2024-03-01)
+
+
+### Features
+
+* Add a gRPC Controller ([#7](https://github.com/wndhydrnt/saturn-sync-protocol/issues/7)) ([2f99f8b](https://github.com/wndhydrnt/saturn-sync-protocol/commit/2f99f8ba023179fd15e379b227dfa5970e2e75f8))
+
 ## 0.1.0 (2024-02-25)
 
 
