@@ -398,10 +398,13 @@ type ActionFile struct {
 	sizeCache     protoimpl.SizeCache
 	unknownFields protoimpl.UnknownFields
 
-	Content string  `protobuf:"bytes,1,opt,name=content,proto3" json:"content,omitempty"`
-	Mode    *string `protobuf:"bytes,2,opt,name=mode,proto3,oneof" json:"mode,omitempty"`
-	Path    string  `protobuf:"bytes,3,opt,name=path,proto3" json:"path,omitempty"`
-	State   string  `protobuf:"bytes,4,opt,name=state,proto3" json:"state,omitempty"`
+	Content string `protobuf:"bytes,1,opt,name=content,proto3" json:"content,omitempty" yaml:"content,omitempty"`
+
+	Mode *string `protobuf:"bytes,2,opt,name=mode,proto3,oneof" json:"mode,omitempty" yaml:"mode,omitempty"`
+
+	Path string `protobuf:"bytes,3,opt,name=path,proto3" json:"path,omitempty" yaml:"path,omitempty"`
+
+	State string `protobuf:"bytes,4,opt,name=state,proto3" json:"state,omitempty" yaml:"state,omitempty"`
 }
 
 func (x *ActionFile) Reset() {
@@ -464,7 +467,6 @@ func (x *ActionFile) GetState() string {
 	return ""
 }
 
-// Context is sent to a remote Task for filtering or applyig actions.
 type Context struct {
 	state         protoimpl.MessageState
 	sizeCache     protoimpl.SizeCache
@@ -512,21 +514,15 @@ func (x *Context) GetRepository() *Repository {
 	return nil
 }
 
-// Repository exposes fields that a Task can use for filtering or templating.
-// It is sent to a Task as part of a Context.
 type Repository struct {
 	state         protoimpl.MessageState
 	sizeCache     protoimpl.SizeCache
 	unknownFields protoimpl.UnknownFields
 
-	// The full name of the repository, like github.com/wndhydrnt/rcmt
-	FullName string `protobuf:"bytes,1,opt,name=full_name,json=fullName,proto3" json:"full_name,omitempty"`
-	// The URL to clone the repository over HTTP, like https://github.com/wndhydrnt/rcmt.git
+	FullName     string `protobuf:"bytes,1,opt,name=full_name,json=fullName,proto3" json:"full_name,omitempty"`
 	CloneUrlHttp string `protobuf:"bytes,2,opt,name=clone_url_http,json=cloneUrlHttp,proto3" json:"clone_url_http,omitempty"`
-	// The URL to clone the repository over SSH, like git@github.com:wndhydrnt/rcmt.git
-	CloneUrlSsh string `protobuf:"bytes,3,opt,name=clone_url_ssh,json=cloneUrlSsh,proto3" json:"clone_url_ssh,omitempty"`
-	// The URL of the repository, like https://github.com/wndhydrnt/rcmt
-	WebUrl string `protobuf:"bytes,4,opt,name=web_url,json=webUrl,proto3" json:"web_url,omitempty"`
+	CloneUrlSsh  string `protobuf:"bytes,3,opt,name=clone_url_ssh,json=cloneUrlSsh,proto3" json:"clone_url_ssh,omitempty"`
+	WebUrl       string `protobuf:"bytes,4,opt,name=web_url,json=webUrl,proto3" json:"web_url,omitempty"`
 }
 
 func (x *Repository) Reset() {
@@ -668,8 +664,9 @@ type FilterLineInFile struct {
 	sizeCache     protoimpl.SizeCache
 	unknownFields protoimpl.UnknownFields
 
-	File   string `protobuf:"bytes,1,opt,name=file,proto3" json:"file,omitempty"`
-	Search string `protobuf:"bytes,2,opt,name=search,proto3" json:"search,omitempty"`
+	Path string `protobuf:"bytes,1,opt,name=path,proto3" json:"path,omitempty" yaml:"path,omitempty"`
+
+	Search string `protobuf:"bytes,2,opt,name=search,proto3" json:"search,omitempty" yaml:"search,omitempty"`
 }
 
 func (x *FilterLineInFile) Reset() {
@@ -704,9 +701,9 @@ func (*FilterLineInFile) Descriptor() ([]byte, []int) {
 	return file_saturn_sync_protocol_v1_saturnsync_proto_rawDescGZIP(), []int{11}
 }
 
-func (x *FilterLineInFile) GetFile() string {
+func (x *FilterLineInFile) GetPath() string {
 	if x != nil {
-		return x.File
+		return x.Path
 	}
 	return ""
 }
@@ -723,7 +720,7 @@ type FilterFile struct {
 	sizeCache     protoimpl.SizeCache
 	unknownFields protoimpl.UnknownFields
 
-	File string `protobuf:"bytes,1,opt,name=file,proto3" json:"file,omitempty"`
+	Path string `protobuf:"bytes,1,opt,name=path,proto3" json:"path,omitempty" yaml:"path,omitempty"`
 }
 
 func (x *FilterFile) Reset() {
@@ -758,9 +755,9 @@ func (*FilterFile) Descriptor() ([]byte, []int) {
 	return file_saturn_sync_protocol_v1_saturnsync_proto_rawDescGZIP(), []int{12}
 }
 
-func (x *FilterFile) GetFile() string {
+func (x *FilterFile) GetPath() string {
 	if x != nil {
-		return x.File
+		return x.Path
 	}
 	return ""
 }
@@ -770,7 +767,7 @@ type FilterRepositoryName struct {
 	sizeCache     protoimpl.SizeCache
 	unknownFields protoimpl.UnknownFields
 
-	Names []string `protobuf:"bytes,1,rep,name=names,proto3" json:"names,omitempty"`
+	Names []string `protobuf:"bytes,1,rep,name=names,proto3" json:"names,omitempty" yaml:"names,omitempty"`
 }
 
 func (x *FilterRepositoryName) Reset() {
@@ -1123,6 +1120,8 @@ type Task struct {
 	sizeCache     protoimpl.SizeCache
 	unknownFields protoimpl.UnknownFields
 
+	// The name of the Task.
+	// It identifies a task.
 	Name string `protobuf:"bytes,1,opt,name=name,proto3" json:"name,omitempty"`
 
 	AutoMerge *bool `protobuf:"varint,2,opt,name=auto_merge,json=autoMerge,proto3,oneof" json:"auto_merge,omitempty" yaml:"autoMerge,omitempty"`
@@ -1146,9 +1145,11 @@ type Task struct {
 
 	PrBody *string `protobuf:"bytes,12,opt,name=pr_body,json=prBody,proto3,oneof" json:"pr_body,omitempty" yaml:"prBody,omitempty"`
 
-	PrTitle *string   `protobuf:"bytes,13,opt,name=pr_title,json=prTitle,proto3,oneof" json:"pr_title,omitempty" yaml:"prTitle,omitempty"`
-	Filters []*Filter `protobuf:"bytes,14,rep,name=filters,proto3" json:"filters,omitempty"`
-	Actions []*Action `protobuf:"bytes,15,rep,name=actions,proto3" json:"actions,omitempty"`
+	PrTitle *string `protobuf:"bytes,13,opt,name=pr_title,json=prTitle,proto3,oneof" json:"pr_title,omitempty" yaml:"prTitle,omitempty"`
+
+	Filters []*Filter `protobuf:"bytes,14,rep,name=filters,proto3" json:"filters,omitempty" yaml:"filters,omitempty"`
+
+	Actions []*Action `protobuf:"bytes,15,rep,name=actions,proto3" json:"actions,omitempty" yaml:"actions,omitempty"`
 }
 
 func (x *Task) Reset() {
@@ -1379,11 +1380,11 @@ var file_saturn_sync_protocol_v1_saturnsync_proto_rawDesc = []byte{
 	0x10, 0x5f, 0x72, 0x65, 0x70, 0x6f, 0x73, 0x69, 0x74, 0x6f, 0x72, 0x79, 0x5f, 0x6e, 0x61, 0x6d,
 	0x65, 0x42, 0x0a, 0x0a, 0x08, 0x5f, 0x72, 0x65, 0x76, 0x65, 0x72, 0x73, 0x65, 0x22, 0x3e, 0x0a,
 	0x10, 0x46, 0x69, 0x6c, 0x74, 0x65, 0x72, 0x4c, 0x69, 0x6e, 0x65, 0x49, 0x6e, 0x46, 0x69, 0x6c,
-	0x65, 0x12, 0x12, 0x0a, 0x04, 0x66, 0x69, 0x6c, 0x65, 0x18, 0x01, 0x20, 0x01, 0x28, 0x09, 0x52,
-	0x04, 0x66, 0x69, 0x6c, 0x65, 0x12, 0x16, 0x0a, 0x06, 0x73, 0x65, 0x61, 0x72, 0x63, 0x68, 0x18,
+	0x65, 0x12, 0x12, 0x0a, 0x04, 0x70, 0x61, 0x74, 0x68, 0x18, 0x01, 0x20, 0x01, 0x28, 0x09, 0x52,
+	0x04, 0x70, 0x61, 0x74, 0x68, 0x12, 0x16, 0x0a, 0x06, 0x73, 0x65, 0x61, 0x72, 0x63, 0x68, 0x18,
 	0x02, 0x20, 0x01, 0x28, 0x09, 0x52, 0x06, 0x73, 0x65, 0x61, 0x72, 0x63, 0x68, 0x22, 0x20, 0x0a,
-	0x0a, 0x46, 0x69, 0x6c, 0x74, 0x65, 0x72, 0x46, 0x69, 0x6c, 0x65, 0x12, 0x12, 0x0a, 0x04, 0x66,
-	0x69, 0x6c, 0x65, 0x18, 0x01, 0x20, 0x01, 0x28, 0x09, 0x52, 0x04, 0x66, 0x69, 0x6c, 0x65, 0x22,
+	0x0a, 0x46, 0x69, 0x6c, 0x74, 0x65, 0x72, 0x46, 0x69, 0x6c, 0x65, 0x12, 0x12, 0x0a, 0x04, 0x70,
+	0x61, 0x74, 0x68, 0x18, 0x01, 0x20, 0x01, 0x28, 0x09, 0x52, 0x04, 0x70, 0x61, 0x74, 0x68, 0x22,
 	0x2c, 0x0a, 0x14, 0x46, 0x69, 0x6c, 0x74, 0x65, 0x72, 0x52, 0x65, 0x70, 0x6f, 0x73, 0x69, 0x74,
 	0x6f, 0x72, 0x79, 0x4e, 0x61, 0x6d, 0x65, 0x12, 0x14, 0x0a, 0x05, 0x6e, 0x61, 0x6d, 0x65, 0x73,
 	0x18, 0x01, 0x20, 0x03, 0x28, 0x09, 0x52, 0x05, 0x6e, 0x61, 0x6d, 0x65, 0x73, 0x22, 0x6c, 0x0a,

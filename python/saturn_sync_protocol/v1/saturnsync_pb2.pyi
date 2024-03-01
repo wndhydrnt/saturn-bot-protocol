@@ -100,18 +100,18 @@ class Filter(_message.Message):
     def __init__(self, file: _Optional[_Union[FilterFile, _Mapping]] = ..., line_in_file: _Optional[_Union[FilterLineInFile, _Mapping]] = ..., repository_name: _Optional[_Union[FilterRepositoryName, _Mapping]] = ..., reverse: bool = ...) -> None: ...
 
 class FilterLineInFile(_message.Message):
-    __slots__ = ("file", "search")
-    FILE_FIELD_NUMBER: _ClassVar[int]
+    __slots__ = ("path", "search")
+    PATH_FIELD_NUMBER: _ClassVar[int]
     SEARCH_FIELD_NUMBER: _ClassVar[int]
-    file: str
+    path: str
     search: str
-    def __init__(self, file: _Optional[str] = ..., search: _Optional[str] = ...) -> None: ...
+    def __init__(self, path: _Optional[str] = ..., search: _Optional[str] = ...) -> None: ...
 
 class FilterFile(_message.Message):
-    __slots__ = ("file",)
-    FILE_FIELD_NUMBER: _ClassVar[int]
-    file: str
-    def __init__(self, file: _Optional[str] = ...) -> None: ...
+    __slots__ = ("path",)
+    PATH_FIELD_NUMBER: _ClassVar[int]
+    path: str
+    def __init__(self, path: _Optional[str] = ...) -> None: ...
 
 class FilterRepositoryName(_message.Message):
     __slots__ = ("names",)

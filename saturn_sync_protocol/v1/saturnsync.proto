@@ -49,27 +49,24 @@ message Action {
 }
 
 message ActionFile {
+  // @gotags: yaml:"content,omitempty"
   string content = 1;
+  // @gotags: yaml:"mode,omitempty"
   optional string mode = 2;
+  // @gotags: yaml:"path,omitempty"
   string path = 3;
+  // @gotags: yaml:"state,omitempty"
   string state = 4;
 }
 
-/* Context is sent to a remote Task for filtering or applyig actions. */
 message Context {
   Repository repository = 1; // Details on the repository to filter or apply actions to.
 }
 
-/* Repository exposes fields that a Task can use for filtering or templating.
-   It is sent to a Task as part of a Context.*/
 message Repository {
-  // The full name of the repository, like github.com/wndhydrnt/rcmt
   string full_name = 1;
-  // The URL to clone the repository over HTTP, like https://github.com/wndhydrnt/rcmt.git
   string clone_url_http = 2;
-  // The URL to clone the repository over SSH, like git@github.com:wndhydrnt/rcmt.git
   string clone_url_ssh = 3;
-  // The URL of the repository, like https://github.com/wndhydrnt/rcmt
   string web_url = 4;
 }
 
@@ -85,15 +82,19 @@ message Filter {
 }
 
 message FilterLineInFile {
-  string file = 1;
+  // @gotags: yaml:"path,omitempty"
+  string path = 1;
+  // @gotags: yaml:"search,omitempty"
   string search = 2;
 }
 
 message FilterFile {
-  string file = 1;
+  // @gotags: yaml:"path,omitempty"
+  string path = 1;
 }
 
 message FilterRepositoryName {
+  // @gotags: yaml:"names,omitempty"
   repeated string names = 1;
 }
 
@@ -125,6 +126,8 @@ message OnPrMergedResponse {
 }
 
 message Task {
+  // The name of the Task.
+  // It identifies a task.
   string name = 1;
   // @gotags: yaml:"autoMerge,omitempty"
   optional bool auto_merge = 2;
@@ -149,6 +152,8 @@ message Task {
   optional string pr_body = 12;
   // @gotags: yaml:"prTitle,omitempty"
   optional string pr_title = 13;
+  // @gotags: yaml:"filters,omitempty"
   repeated Filter filters = 14;
+  // @gotags: yaml:"actions,omitempty"
   repeated Action actions = 15;
 }
