@@ -6,4 +6,4 @@ lint:
   use:
     - DEFAULT
   ignore:
-    - "saturn_sync_protocol/v1/grpc_controller.proto"
+    - "saturn_sync_protocol/plugin/grpc_controller.proto"
