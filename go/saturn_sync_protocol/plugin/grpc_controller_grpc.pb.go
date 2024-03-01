@@ -5,9 +5,9 @@
 // versions:
 // - protoc-gen-go-grpc v1.3.0
 // - protoc             (unknown)
-// source: saturn_sync_protocol/v1/grpc_controller.proto
+// source: saturn_sync_protocol/plugin/grpc_controller.proto
 
-package saturn_sync_protocolv1
+package plugin
 
 import (
 	context "context"
@@ -22,7 +22,7 @@ import (
 const _ = grpc.SupportPackageIsVersion7
 
 const (
-	GRPCController_Shutdown_FullMethodName = "/saturn_sync_protocol.v1.GRPCController/Shutdown"
+	GRPCController_Shutdown_FullMethodName = "/plugin.GRPCController/Shutdown"
 )
 
 // GRPCControllerClient is the client API for GRPCController service.
@@ -99,7 +99,7 @@ func _GRPCController_Shutdown_Handler(srv interface{}, ctx context.Context, dec 
 // It's only intended for direct use with grpc.RegisterService,
 // and not to be introspected or modified (even as a copy)
 var GRPCController_ServiceDesc = grpc.ServiceDesc{
-	ServiceName: "saturn_sync_protocol.v1.GRPCController",
+	ServiceName: "plugin.GRPCController",
 	HandlerType: (*GRPCControllerServer)(nil),
 	Methods: []grpc.MethodDesc{
 		{
@@ -108,5 +108,5 @@ var GRPCController_ServiceDesc = grpc.ServiceDesc{
 		},
 	},
 	Streams:  []grpc.StreamDesc{},
-	Metadata: "saturn_sync_protocol/v1/grpc_controller.proto",
+	Metadata: "saturn_sync_protocol/plugin/grpc_controller.proto",
 }

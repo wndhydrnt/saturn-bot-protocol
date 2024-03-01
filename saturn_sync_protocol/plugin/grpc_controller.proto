@@ -2,7 +2,7 @@
 // SPDX-License-Identifier: MPL-2.0
 
 syntax = "proto3";
-package saturn_sync_protocol.v1;
+package plugin;
 
 message Empty {
 }
