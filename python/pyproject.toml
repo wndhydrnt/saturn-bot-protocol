@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "saturn-sync-protocol"
-version = "0.2.0"
+version = "0.2.1"
 description = "gRPC protocol used by remote tasks of saturn-sync."
 authors = ["Markus Meyer <hydrantanderwand@gmail.com>"]
 license = "MPL-2.0"

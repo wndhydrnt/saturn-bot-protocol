@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.2.1](https://github.com/wndhydrnt/saturn-sync-protocol/compare/v0.2.0...v0.2.1) (2024-03-01)
+
+
+### Bug Fixes
+
+* wrong package of gRPC Controller ([#8](https://github.com/wndhydrnt/saturn-sync-protocol/issues/8)) ([9bbab3c](https://github.com/wndhydrnt/saturn-sync-protocol/commit/9bbab3c1716b8dbc70c03fdd24a38fad77e28431))
+
 ## [0.2.0](https://github.com/wndhydrnt/saturn-sync-protocol/compare/v0.1.0...v0.2.0) (2024-03-01)
 
 
