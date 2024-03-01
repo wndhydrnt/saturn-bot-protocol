@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.3.0](https://github.com/wndhydrnt/saturn-sync-protocol/compare/v0.2.1...v0.3.0) (2024-03-01)
+
+
+### Features
+
+* update identifiers of some fields and add gotags ([#10](https://github.com/wndhydrnt/saturn-sync-protocol/issues/10)) ([45d809d](https://github.com/wndhydrnt/saturn-sync-protocol/commit/45d809d4065bb7f778dfc04ae36bd2d3ef2e28b2))
+
 ## [0.2.1](https://github.com/wndhydrnt/saturn-sync-protocol/compare/v0.2.0...v0.2.1) (2024-03-01)
 
 
