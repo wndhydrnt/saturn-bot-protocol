@@ -1,0 +1,12 @@
+// Copyright (c) HashiCorp, Inc.
+// SPDX-License-Identifier: MPL-2.0
+
+syntax = "proto3";
+package saturn_sync_protocol.v1;
+
+message Empty {
+}
+
+service GRPCController {
+    rpc Shutdown(Empty) returns (Empty);
+}
