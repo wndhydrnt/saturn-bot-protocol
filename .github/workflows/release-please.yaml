@@ -11,8 +11,5 @@ jobs:
     steps:
       - uses: google-github-actions/release-please-action@v4
         with:
-          # Multi-project configuration
-          # https://github.com/google-github-actions/release-please-action?tab=readme-ov-file#advanced-release-configuration
-          config-file: release-please-config.json
-          manifest-file: .release-please-manifest.json
+          release-type: simple
           token: ${{ secrets.RELEASE_PLEASE_TOKEN }}
