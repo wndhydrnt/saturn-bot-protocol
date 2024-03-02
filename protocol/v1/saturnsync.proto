@@ -3,7 +3,7 @@
 // file, You can obtain one at https://mozilla.org/MPL/2.0/.
 
 syntax = "proto3";
-package saturn_sync_protocol.v1;
+package protocol.v1;
 
 service TaskService {
   rpc ExecuteActions(ExecuteActionsRequest) returns (ExecuteActionsResponse) {}
