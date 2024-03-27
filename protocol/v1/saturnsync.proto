@@ -70,32 +70,36 @@ message Repository {
   string web_url = 4;
 }
 
-message Filter {
-  // @gotags: yaml:"file,omitempty"
-  optional FilterFile file = 1;
-  // @gotags: yaml:"lineInFile,omitempty"
-  optional FilterLineInFile line_in_file = 2;
-  // @gotags: yaml:"repositoryName,omitempty"
-  optional FilterRepositoryName repository_name = 3;
-  // @gotags: yaml:"reverse,omitempty"
-  optional bool reverse = 4;
+message Filters {
+  // @gotags: yaml:"repositoryNames,omitempty"
+  repeated FilterRepositoryName repository_names = 1;
+  // @gotags: yaml:"files,omitempty"
+  repeated FilterFile files = 2;
+  // @gotags: yaml:"fileContents,omitempty"
+  repeated FilterFileContent file_contents = 3;
 }
 
-message FilterLineInFile {
+message FilterFileContent {
   // @gotags: yaml:"path,omitempty"
   string path = 1;
   // @gotags: yaml:"search,omitempty"
   string search = 2;
+  // @gotags: yaml:"reverse,omitempty"
+  optional bool reverse = 3;
 }
 
 message FilterFile {
   // @gotags: yaml:"path,omitempty"
   string path = 1;
+  // @gotags: yaml:"reverse,omitempty"
+  optional bool reverse = 2;
 }
 
 message FilterRepositoryName {
   // @gotags: yaml:"names,omitempty"
   repeated string names = 1;
+  // @gotags: yaml:"reverse,omitempty"
+  optional bool reverse = 2;
 }
 
 message OnPrClosedRequest {
@@ -153,7 +157,7 @@ message Task {
   // @gotags: yaml:"prTitle,omitempty"
   optional string pr_title = 13;
   // @gotags: yaml:"filters,omitempty"
-  repeated Filter filters = 14;
+  optional Filters filters = 14;
   // @gotags: yaml:"actions,omitempty"
   repeated Action actions = 15;
 }
