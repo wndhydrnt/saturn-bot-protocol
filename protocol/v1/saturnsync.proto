@@ -43,20 +43,37 @@ message ListTasksResponse {
   optional string error = 2;
 }
 
-message Action {
+message Actions {
   // @gotags: yaml:"file,omitempty"
-  optional ActionFile file = 1;
+  repeated ActionFile file = 1;
+  // @gotags: yaml:"lineInFile,omitempty"
+  repeated ActionLineInFile line_in_file = 2;
 }
 
 message ActionFile {
   // @gotags: yaml:"content,omitempty"
-  string content = 1;
+  optional string content = 1;
   // @gotags: yaml:"mode,omitempty"
   optional string mode = 2;
   // @gotags: yaml:"path,omitempty"
   string path = 3;
   // @gotags: yaml:"state,omitempty"
   string state = 4;
+  // @gotags: yaml:"overwrite,omitempty"
+  optional bool overwrite = 5;
+}
+
+message ActionLineInFile {
+  // @gotags: yaml:"line,omitempty"
+  optional string line = 1;
+  // @gotags: yaml:"path,omitempty"
+  string path = 2;
+  // @gotags: yaml:"regex,omitempty"
+  optional string regex = 3;
+  // @gotags: yaml:"state,omitempty"
+  string state = 4;
+  // @gotags: yaml:"insertAt,omitempty"
+  optional string insert_at = 5;
 }
 
 message Context {
@@ -159,5 +176,5 @@ message Task {
   // @gotags: yaml:"filters,omitempty"
   optional Filters filters = 14;
   // @gotags: yaml:"actions,omitempty"
-  repeated Action actions = 15;
+  optional Actions actions = 15;
 }
