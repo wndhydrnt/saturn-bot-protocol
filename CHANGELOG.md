@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.7.0](https://github.com/wndhydrnt/saturn-sync-protocol/compare/v0.6.0...v0.7.0) (2024-04-25)
+
+
+### Features
+
+* Introduce new Plugin architecture ([dd289a2](https://github.com/wndhydrnt/saturn-sync-protocol/commit/dd289a258d37210df92a473c270e9685c91ccb4e))
+
 ## [0.6.0](https://github.com/wndhydrnt/saturn-sync-protocol/compare/v0.5.0...v0.6.0) (2024-04-02)
 
 
