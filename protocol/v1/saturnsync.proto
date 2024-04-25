@@ -5,19 +5,18 @@
 syntax = "proto3";
 package protocol.v1;
 
-service TaskService {
+service PluginService {
   rpc ExecuteActions(ExecuteActionsRequest) returns (ExecuteActionsResponse) {}
   rpc ExecuteFilters(ExecuteFiltersRequest) returns (ExecuteFiltersResponse) {}
-  rpc ListTasks(ListTasksRequest) returns (ListTasksResponse) {}
+  rpc GetPlugin(GetPluginRequest) returns (GetPluginResponse) {}
   rpc OnPrClosed(OnPrClosedRequest) returns (OnPrClosedResponse) {}
   rpc OnPrCreated(OnPrCreatedRequest) returns (OnPrCreatedResponse) {}
   rpc OnPrMerged(OnPrMergedRequest) returns (OnPrMergedResponse) {}
 }
 
 message ExecuteActionsRequest {
-  string task_name = 1;
-  string path = 2;
-  Context context = 3;
+  string path = 1;
+  Context context = 2;
 }
 
 message ExecuteActionsResponse {
@@ -25,8 +24,7 @@ message ExecuteActionsResponse {
 }
 
 message ExecuteFiltersRequest {
-  string task_name = 1;
-  Context context = 2;
+  Context context = 1;
 }
 
 message ExecuteFiltersResponse {
@@ -34,46 +32,14 @@ message ExecuteFiltersResponse {
   optional string error = 2;
 }
 
-message ListTasksRequest {
-  bytes custom_config = 1;
+message GetPluginRequest {
+  map<string, string> config = 1;
 }
 
-message ListTasksResponse {
-  repeated Task tasks = 1;
-  optional string error = 2;
-}
-
-message Actions {
-  // @gotags: yaml:"file,omitempty"
-  repeated ActionFile file = 1;
-  // @gotags: yaml:"lineInFile,omitempty"
-  repeated ActionLineInFile line_in_file = 2;
-}
-
-message ActionFile {
-  // @gotags: yaml:"content,omitempty"
-  optional string content = 1;
-  // @gotags: yaml:"mode,omitempty"
-  optional string mode = 2;
-  // @gotags: yaml:"path,omitempty"
-  string path = 3;
-  // @gotags: yaml:"state,omitempty"
-  string state = 4;
-  // @gotags: yaml:"overwrite,omitempty"
-  optional bool overwrite = 5;
-}
-
-message ActionLineInFile {
-  // @gotags: yaml:"line,omitempty"
-  optional string line = 1;
-  // @gotags: yaml:"path,omitempty"
-  string path = 2;
-  // @gotags: yaml:"regex,omitempty"
-  optional string regex = 3;
-  // @gotags: yaml:"state,omitempty"
-  string state = 4;
-  // @gotags: yaml:"insertAt,omitempty"
-  optional string insert_at = 5;
+message GetPluginResponse {
+  string name = 1;
+  int32 priority = 2;
+  optional string error = 3;
 }
 
 message Context {
@@ -87,41 +53,8 @@ message Repository {
   string web_url = 4;
 }
 
-message Filters {
-  // @gotags: yaml:"repositoryNames,omitempty"
-  repeated FilterRepositoryName repository_names = 1;
-  // @gotags: yaml:"files,omitempty"
-  repeated FilterFile files = 2;
-  // @gotags: yaml:"fileContents,omitempty"
-  repeated FilterFileContent file_contents = 3;
-}
-
-message FilterFileContent {
-  // @gotags: yaml:"path,omitempty"
-  string path = 1;
-  // @gotags: yaml:"search,omitempty"
-  string search = 2;
-  // @gotags: yaml:"reverse,omitempty"
-  optional bool reverse = 3;
-}
-
-message FilterFile {
-  // @gotags: yaml:"path,omitempty"
-  string path = 1;
-  // @gotags: yaml:"reverse,omitempty"
-  optional bool reverse = 2;
-}
-
-message FilterRepositoryName {
-  // @gotags: yaml:"names,omitempty"
-  repeated string names = 1;
-  // @gotags: yaml:"reverse,omitempty"
-  optional bool reverse = 2;
-}
-
 message OnPrClosedRequest {
-  string task_name = 1;
-  Context context = 2;
+  Context context = 1;
 }
 
 message OnPrClosedResponse {
@@ -129,8 +62,7 @@ message OnPrClosedResponse {
 }
 
 message OnPrCreatedRequest {
-  string task_name = 1;
-  Context context = 2;
+  Context context = 1;
 }
 
 message OnPrCreatedResponse {
@@ -138,43 +70,9 @@ message OnPrCreatedResponse {
 }
 
 message OnPrMergedRequest {
-  string task_name = 1;
-  Context context = 2;
+  Context context = 1;
 }
 
 message OnPrMergedResponse {
   optional string error = 1;
-}
-
-message Task {
-  // The name of the Task.
-  // It identifies a task.
-  string name = 1;
-  // @gotags: yaml:"autoMerge,omitempty"
-  optional bool auto_merge = 2;
-  // @gotags: yaml:"autoMergeAfterSeconds,omitempty"
-  optional int32 auto_merge_after_seconds = 3;
-  // @gotags: yaml:"branchName,omitempty"
-  optional string branch_name = 4;
-  // @gotags: yaml:"changeLimit,omitempty"
-  optional int32 change_limit = 5;
-  // @gotags: yaml:"commitMessage,omitempty"
-  optional string commit_message = 6;
-  // @gotags: yaml:"createOnly,omitempty"
-  optional bool create_only = 7;
-  // @gotags: yaml:"disabled,omitempty"
-  optional bool disabled = 8;
-  // @gotags: yaml:"keepBranchAfterMerge,omitempty"
-  optional bool keep_branch_after_merge = 9;
-  repeated string labels = 10;
-  // @gotags: yaml:"mergeOnce,omitempty"
-  optional bool merge_once = 11;
-  // @gotags: yaml:"prBody,omitempty"
-  optional string pr_body = 12;
-  // @gotags: yaml:"prTitle,omitempty"
-  optional string pr_title = 13;
-  // @gotags: yaml:"filters,omitempty"
-  optional Filters filters = 14;
-  // @gotags: yaml:"actions,omitempty"
-  optional Actions actions = 15;
 }
