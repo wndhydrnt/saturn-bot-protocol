@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.8.0](https://github.com/wndhydrnt/saturn-bot-protocol/compare/v0.7.0...v0.8.0) (2024-04-28)
+
+
+### Features
+
+* rename "saturn-sync" to "saturn-bot" ([2b7ed1a](https://github.com/wndhydrnt/saturn-bot-protocol/commit/2b7ed1a3b24986f619629bc3d16f1465a130fc19))
+
 ## [0.7.0](https://github.com/wndhydrnt/saturn-bot-protocol/compare/v0.6.0...v0.7.0) (2024-04-25)
 
 ### Features
