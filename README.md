@@ -1,3 +1,3 @@
-# saturn-sync-protocol
+# saturn-bot-protocol
 
-gRPC protocol used by remote tasks of saturn-sync.
+gRPC protocol used by remote tasks of saturn-bot.
