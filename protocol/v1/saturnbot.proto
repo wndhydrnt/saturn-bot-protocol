@@ -21,6 +21,8 @@ message ExecuteActionsRequest {
 
 message ExecuteActionsResponse {
   optional string error = 1;
+  // Template variables are received by saturn-bot and passed to templates of pull request title or pull request body.
+  map<string, string> template_vars = 2;
 }
 
 message ExecuteFiltersRequest {
@@ -30,6 +32,8 @@ message ExecuteFiltersRequest {
 message ExecuteFiltersResponse {
   bool match = 1;
   optional string error = 2;
+  // Template variables are received by saturn-bot and passed to templates of pull request title or pull request body.
+  map<string, string> template_vars = 3;
 }
 
 message GetPluginRequest {
