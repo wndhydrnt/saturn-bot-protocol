@@ -44,6 +44,12 @@ message GetPluginResponse {
 
 message Context {
   Repository repository = 1; // Details on the repository to filter or apply actions to.
+  optional PullRequest pull_request = 2; // Details on the pull request. Set only if a pull request exists.
+}
+
+message PullRequest {
+  int64 number = 1; // Identifier of the pull request.
+  string web_url = 2; // URL to view the pull request in a browser.
 }
 
 message Repository {
