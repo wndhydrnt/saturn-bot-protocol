@@ -23,6 +23,8 @@ message ExecuteActionsResponse {
   optional string error = 1;
   // Template variables are received by saturn-bot and passed to templates of pull request title or pull request body.
   map<string, string> template_vars = 2;
+  // Plugin data contains arbitrary data set by the plugin. The data is then passed on to other plugins by saturn-bot.
+  map<string, string> plugin_data = 3;
 }
 
 message ExecuteFiltersRequest {
@@ -34,6 +36,8 @@ message ExecuteFiltersResponse {
   optional string error = 2;
   // Template variables are received by saturn-bot and passed to templates of pull request title or pull request body.
   map<string, string> template_vars = 3;
+  // Plugin data contains arbitrary data set by the plugin. The data is then passed on to other plugins by saturn-bot.
+  map<string, string> plugin_data = 4;
 }
 
 message GetPluginRequest {
@@ -49,6 +53,8 @@ message GetPluginResponse {
 message Context {
   Repository repository = 1; // Details on the repository to filter or apply actions to.
   optional PullRequest pull_request = 2; // Details on the pull request. Set only if a pull request exists.
+  // Plugin data contains arbitrary data set by other plugins.
+  map<string, string> plugin_data = 3;
 }
 
 message PullRequest {
