@@ -23,7 +23,7 @@ message ExecuteActionsResponse {
   optional string error = 1;
   // Template variables are received by saturn-bot and passed to templates of pull request title or pull request body.
   map<string, string> template_vars = 2;
-  // Plugin data contains arbitrary data set by the plugin. The data is then passed along to other plugins.
+  // Plugin data contains arbitrary data set by the plugin. The data is then passed on to other plugins by saturn-bot.
   map<string, string> plugin_data = 3;
 }
 
@@ -36,7 +36,7 @@ message ExecuteFiltersResponse {
   optional string error = 2;
   // Template variables are received by saturn-bot and passed to templates of pull request title or pull request body.
   map<string, string> template_vars = 3;
-  // Plugin data contains arbitrary data set by the plugin. The data is then passed along to other plugins.
+  // Plugin data contains arbitrary data set by the plugin. The data is then passed on to other plugins by saturn-bot.
   map<string, string> plugin_data = 4;
 }
 
