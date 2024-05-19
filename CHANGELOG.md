@@ -1,5 +1,14 @@
 # Changelog
 
+## [0.9.0](https://github.com/wndhydrnt/saturn-bot-protocol/compare/v0.8.0...v0.9.0) (2024-05-19)
+
+
+### Features
+
+* Allow actions and filters of a plugin to set custom template variables ([#21](https://github.com/wndhydrnt/saturn-bot-protocol/issues/21)) ([b88a2ca](https://github.com/wndhydrnt/saturn-bot-protocol/commit/b88a2ca9cf0c7b3e7b53c35c018e14af878a2bd6))
+* Optionally send data of pull request to endpoints ([c2ef8f6](https://github.com/wndhydrnt/saturn-bot-protocol/commit/c2ef8f68ce91648061f5486706b3da0715fcebfa))
+* Pass data between plugins ([#22](https://github.com/wndhydrnt/saturn-bot-protocol/issues/22)) ([faa8e11](https://github.com/wndhydrnt/saturn-bot-protocol/commit/faa8e11f3e6ba6cd83e6718592f6f9d64bf30bc2))
+
 ## [0.8.0](https://github.com/wndhydrnt/saturn-bot-protocol/compare/v0.7.0...v0.8.0) (2024-04-28)
 
 
