@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.10.0](https://github.com/wndhydrnt/saturn-bot-protocol/compare/v0.9.0...v0.10.0) (2024-07-31)
+
+
+### Features
+
+* Merge fields `plugin_data` and `template_vars` into `run_data` ([#23](https://github.com/wndhydrnt/saturn-bot-protocol/issues/23)) ([7c6c0d3](https://github.com/wndhydrnt/saturn-bot-protocol/commit/7c6c0d3f2c47916ec25bb2fd9b85a61d5a83bcc4))
+
 ## [0.9.0](https://github.com/wndhydrnt/saturn-bot-protocol/compare/v0.8.0...v0.9.0) (2024-05-19)
 
 
