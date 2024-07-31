@@ -21,10 +21,11 @@ message ExecuteActionsRequest {
 
 message ExecuteActionsResponse {
   optional string error = 1;
-  // Template variables are received by saturn-bot and passed to templates of pull request title or pull request body.
-  map<string, string> template_vars = 2;
-  // Plugin data contains arbitrary data set by the plugin. The data is then passed on to other plugins by saturn-bot.
-  map<string, string> plugin_data = 3;
+  reserved 2, 3; // Fields removed
+  // Run data contains dynamic, arbitrary data of the run.
+  // The plugin can add its own data here.
+  // The data is then passed on to other plugins by saturn-bot and used in templating.
+  map<string, string> run_data = 4;
 }
 
 message ExecuteFiltersRequest {
@@ -34,10 +35,11 @@ message ExecuteFiltersRequest {
 message ExecuteFiltersResponse {
   bool match = 1;
   optional string error = 2;
-  // Template variables are received by saturn-bot and passed to templates of pull request title or pull request body.
-  map<string, string> template_vars = 3;
-  // Plugin data contains arbitrary data set by the plugin. The data is then passed on to other plugins by saturn-bot.
-  map<string, string> plugin_data = 4;
+  reserved 3, 4; // Fields removed
+  // Run data contains dynamic, arbitrary data of the run.
+  // The plugin can add its own data here.
+  // The data is then passed on to other plugins by saturn-bot and used in templating.
+  map<string, string> run_data = 5;
 }
 
 message GetPluginRequest {
@@ -53,8 +55,9 @@ message GetPluginResponse {
 message Context {
   Repository repository = 1; // Details on the repository to filter or apply actions to.
   optional PullRequest pull_request = 2; // Details on the pull request. Set only if a pull request exists.
-  // Plugin data contains arbitrary data set by other plugins.
-  map<string, string> plugin_data = 3;
+  reserved 3; // Fields removed
+  // Run data contains dynamic, arbitrary data of the run.
+  map<string, string> run_data = 4;
 }
 
 message PullRequest {
