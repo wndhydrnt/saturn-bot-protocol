@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.11.1](https://github.com/wndhydrnt/saturn-bot-protocol/compare/v0.11.0...v0.11.1) (2024-09-18)
+
+
+### Bug Fixes
+
+* **integration-test:** Embed feature files in binary ([e398be9](https://github.com/wndhydrnt/saturn-bot-protocol/commit/e398be966127ef3dba7727171c1e624ecc1dd5d9))
+
 ## [0.11.0](https://github.com/wndhydrnt/saturn-bot-protocol/compare/v0.10.0...v0.11.0) (2024-09-18)
 
 
