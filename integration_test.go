@@ -3,6 +3,7 @@ package main
 import (
 	"bytes"
 	"context"
+	"embed"
 	"encoding/json"
 	"errors"
 	"flag"
@@ -201,10 +202,14 @@ func InitializeScenario(ctx *godog.ScenarioContext) {
 	ctx.Step(`^the response should match JSON:$`, theResponseShouldMatchJSON)
 }
 
+//go:embed features/*
+var features embed.FS
+
 func TestFeatures(t *testing.T) {
 	suite := godog.TestSuite{
 		ScenarioInitializer: InitializeScenario,
 		Options: &godog.Options{
+			FS:       features,
 			Format:   "pretty",
 			Paths:    []string{"features"},
 			TestingT: t,
