@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.11.0](https://github.com/wndhydrnt/saturn-bot-protocol/compare/v0.10.0...v0.11.0) (2024-09-18)
+
+
+### Features
+
+* Add integration test suite ([#25](https://github.com/wndhydrnt/saturn-bot-protocol/issues/25)) ([38e731d](https://github.com/wndhydrnt/saturn-bot-protocol/commit/38e731db3327572fb1914aa1541f212176925b3e))
+
 ## [0.10.0](https://github.com/wndhydrnt/saturn-bot-protocol/compare/v0.9.0...v0.10.0) (2024-07-31)
 
 
