@@ -103,13 +103,6 @@ func onPrMergedIsCalled(ctx context.Context) error {
 	return nil
 }
 
-func theContentOfFileMatches(ctx context.Context, fileName string, content *godog.DocString) error {
-	b, err := os.ReadFile(fileName)
-	require.NoErrorf(godog.T(ctx), err, "Read file %s", fileName)
-	require.Equal(godog.T(ctx), content.Content, string(b))
-	return nil
-}
-
 func theContextContainsTheRepository(ctx context.Context, repoName string) (context.Context, error) {
 	opts, ok := ctx.Value(pluginOptsKey{}).(command.ExecPluginOptions)
 	if !ok {
@@ -127,6 +120,14 @@ func theContextContainsTheRepository(ctx context.Context, repoName string) (cont
 		WebUrl:       fmt.Sprintf("https://%s", repoName),
 	}
 	return context.WithValue(ctx, pluginOptsKey{}, opts), nil
+}
+
+func theContentOfTemporaryFileMatches(ctx context.Context, fileName string, content *godog.DocString) error {
+	path := filepath.Join(os.TempDir(), fileName)
+	b, err := os.ReadFile(path)
+	require.NoErrorf(godog.T(ctx), err, "Read file %s", path)
+	require.Equal(godog.T(ctx), content.Content, string(b))
+	return nil
 }
 
 func theContextContainsRunData(ctx context.Context, runDataRaw *godog.DocString) (context.Context, error) {
@@ -157,10 +158,11 @@ func theFileExistsWithContent(ctx context.Context, fileName string, fileContent 
 	return nil
 }
 
-func theFileIsDeleted(ctx context.Context, fileName string) error {
-	err := os.Remove(fileName)
+func theTemporaryFileIsDeleted(ctx context.Context, fileName string) error {
+	path := filepath.Join(os.TempDir(), fileName)
+	err := os.Remove(path)
 	if !errors.Is(err, os.ErrNotExist) {
-		require.NoErrorf(godog.T(ctx), err, "Deletes the file %s", fileName)
+		require.NoErrorf(godog.T(ctx), err, "Deletes the file %s", path)
 	}
 	return nil
 }
@@ -190,11 +192,11 @@ func InitializeScenario(ctx *godog.ScenarioContext) {
 	ctx.Step(`^OnPrClosed is called$`, onPrClosedIsCalled)
 	ctx.Step(`^OnPrCreated is called$`, onPrCreatedIsCalled)
 	ctx.Step(`^OnPrMerged is called$`, onPrMergedIsCalled)
-	ctx.Step(`^the content of file "([^"]*)" matches:$`, theContentOfFileMatches)
+	ctx.Step(`^the content of temporary file "([^"]*)" matches:$`, theContentOfTemporaryFileMatches)
 	ctx.Step(`^the context contains run data:$`, theContextContainsRunData)
 	ctx.Step(`^the context contains the repository "([^"]*)"$`, theContextContainsTheRepository)
 	ctx.Step(`^the file "([^"]*)" exists with content:$`, theFileExistsWithContent)
-	ctx.Step(`^the file "([^"]*)" is deleted$`, theFileIsDeleted)
+	ctx.Step(`^the temporary file "([^"]*)" is deleted$`, theTemporaryFileIsDeleted)
 	ctx.Step(`^the plugin configuration:$`, thePluginConfiguration)
 	ctx.Step(`^the response should match JSON:$`, theResponseShouldMatchJSON)
 }
