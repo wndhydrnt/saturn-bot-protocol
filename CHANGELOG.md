@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.11.3](https://github.com/wndhydrnt/saturn-bot-protocol/compare/v0.11.2...v0.11.3) (2024-09-19)
+
+
+### Bug Fixes
+
+* **integration-test:** Call binary of saturn-bot instead of library ([64cf0d8](https://github.com/wndhydrnt/saturn-bot-protocol/commit/64cf0d8a89c3421cc9c0aee873b20849d7190605))
+
 ## [0.11.2](https://github.com/wndhydrnt/saturn-bot-protocol/compare/v0.11.1...v0.11.2) (2024-09-18)
 
 
