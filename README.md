@@ -7,5 +7,5 @@ The protocol is defined in [protobuf](https://protobuf.dev/) for use by [go-plug
 Plugin libraries that implement the protocol can use the integration test suite to verify the implementation. The directory [features](./features/) contains the test suite. Every [release](https://github.com/wndhydrnt/saturn-bot-protocol/releases) distributes binaries of the integration test suite. Download the binary and execute it:
 
 ```shell
-integration-test -path <path to plugin implementation>
+integration-test -plugin-path <path to plugin implementation> -saturn-bot-path <path to binary of saturn-bot>
 ```

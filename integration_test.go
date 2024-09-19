@@ -8,119 +8,107 @@ import (
 	"errors"
 	"flag"
 	"fmt"
-	"io"
 	"os"
+	"os/exec"
 	"path/filepath"
 	"strings"
 	"testing"
 
 	"github.com/cucumber/godog"
 	"github.com/stretchr/testify/require"
-	protoV1 "github.com/wndhydrnt/saturn-bot-go/protocol/v1"
-	"github.com/wndhydrnt/saturn-bot/pkg/command"
 )
 
-var pluginPath = flag.String("path", "", "Path to the plugin to test")
+var pluginPath = flag.String("plugin-path", "", "Path to the plugin to test")
+var saturnBotPath = flag.String("saturn-bot-path", "saturn-bot", "Path to the binary of saturn-bot")
 
 type callResultKey struct{}
-type pluginOptsKey struct{}
+type pluginFlagsKey struct{}
 
-func applyIsCalled(ctx context.Context) (context.Context, error) {
-	opts, ok := ctx.Value(pluginOptsKey{}).(command.ExecPluginOptions)
+func pluginFlags(ctx context.Context) map[string][]string {
+	flags, ok := ctx.Value(pluginFlagsKey{}).(map[string][]string)
 	if !ok {
-		opts = command.ExecPluginOptions{}
+		flags = make(map[string][]string)
 	}
 
-	opts.LogLevel = "error"
-	opts.Path = *pluginPath
+	return flags
+}
 
-	outBuf := &bytes.Buffer{}
-	opts.Out = outBuf
+func executeSaturnBot(t godog.TestingT, cmdName string, flags map[string][]string) string {
+	flags["path"] = []string{*pluginPath}
+	args := []string{"plugin", cmdName}
+	for flagKey, flagValues := range flags {
+		for _, flagValue := range flagValues {
+			args = append(args, "--"+flagKey)
+			args = append(args, flagValue)
+		}
+	}
 
+	cmd := exec.Command(*saturnBotPath, args...)
+	stdoutBuf := &bytes.Buffer{}
+	cmd.Stdout = stdoutBuf
+	stderrBuf := &bytes.Buffer{}
+	cmd.Stderr = stderrBuf
+	err := cmd.Start()
+	require.NoError(t, err, "Command starts successfully")
+	err = cmd.Wait()
+	if err != nil {
+		t.Fatalf("Command failed\n  Stderr: %s\n  Call: %s %s", stderrBuf.String(), *saturnBotPath, strings.Join(args, " "))
+	}
+	return stdoutBuf.String()
+}
+
+func applyIsCalled(ctx context.Context) (context.Context, error) {
 	workDir, err := os.MkdirTemp("", "")
 	require.NoErrorf(godog.T(ctx), err, "Should create temporary working directory at %s", workDir)
-	opts.WorkDir = workDir
-
-	err = command.ExecPlugin("apply", opts)
-	require.NoError(godog.T(ctx), err, "Call to apply succeeds")
-	ctx = context.WithValue(ctx, pluginOptsKey{}, opts)
-	return context.WithValue(ctx, callResultKey{}, outBuf.String()), nil
+	flags := pluginFlags(ctx)
+	flags["workdir"] = []string{workDir}
+	result := executeSaturnBot(godog.T(ctx), "apply", flags)
+	return context.WithValue(ctx, callResultKey{}, result), nil
 }
 
 func filterIsCalled(ctx context.Context) (context.Context, error) {
-	opts, ok := ctx.Value(pluginOptsKey{}).(command.ExecPluginOptions)
-	if !ok {
-		opts = command.ExecPluginOptions{}
-	}
-
-	opts.LogLevel = "error"
-	outBuf := &bytes.Buffer{}
-	opts.Out = outBuf
-	opts.Path = *pluginPath
-	err := command.ExecPlugin("filter", opts)
-	require.NoError(godog.T(ctx), err, "Call to filter succeeds")
-	return context.WithValue(ctx, callResultKey{}, outBuf.String()), nil
+	result := executeSaturnBot(godog.T(ctx), "filter", pluginFlags(ctx))
+	return context.WithValue(ctx, callResultKey{}, result), nil
 }
 
 func onPrClosedIsCalled(ctx context.Context) error {
-	opts, ok := ctx.Value(pluginOptsKey{}).(command.ExecPluginOptions)
-	if !ok {
-		opts = command.ExecPluginOptions{}
-	}
-
-	opts.LogLevel = "error"
-	opts.Out = io.Discard
-	opts.Path = *pluginPath
-	err := command.ExecPlugin("onPrClosed", opts)
-	require.NoError(godog.T(ctx), err, "Call to OnPrClosed succeeds")
+	executeSaturnBot(godog.T(ctx), "onPrClosed", pluginFlags(ctx))
 	return nil
 }
 
 func onPrCreatedIsCalled(ctx context.Context) error {
-	opts, ok := ctx.Value(pluginOptsKey{}).(command.ExecPluginOptions)
-	if !ok {
-		opts = command.ExecPluginOptions{}
-	}
-
-	opts.LogLevel = "error"
-	opts.Out = io.Discard
-	opts.Path = *pluginPath
-	err := command.ExecPlugin("onPrCreated", opts)
-	require.NoError(godog.T(ctx), err, "Call to OnPrCreated succeeds")
+	executeSaturnBot(godog.T(ctx), "onPrCreated", pluginFlags(ctx))
 	return nil
 }
 
 func onPrMergedIsCalled(ctx context.Context) error {
-	opts, ok := ctx.Value(pluginOptsKey{}).(command.ExecPluginOptions)
-	if !ok {
-		opts = command.ExecPluginOptions{}
-	}
-
-	opts.LogLevel = "error"
-	opts.Out = io.Discard
-	opts.Path = *pluginPath
-	err := command.ExecPlugin("onPrMerged", opts)
-	require.NoError(godog.T(ctx), err, "Call to OnPrMerged succeeds")
+	executeSaturnBot(godog.T(ctx), "onPrMerged", pluginFlags(ctx))
 	return nil
 }
 
 func theContextContainsTheRepository(ctx context.Context, repoName string) (context.Context, error) {
-	opts, ok := ctx.Value(pluginOptsKey{}).(command.ExecPluginOptions)
-	if !ok {
-		opts = command.ExecPluginOptions{}
+	flags := pluginFlags(ctx)
+
+	pluginCtx := make(map[string]any)
+	if len(flags["context"]) == 1 {
+		dec := json.NewDecoder(strings.NewReader(flags["context"][0]))
+		err := dec.Decode(&pluginCtx)
+		require.NoError(godog.T(ctx), err, "Decode plugin context from JSON")
 	}
 
-	if opts.Context == nil {
-		opts.Context = &protoV1.Context{}
+	repository := map[string]string{
+		"full_name":      repoName,
+		"clone_url_http": fmt.Sprintf("http://%s.git", repoName),
+		"clone_url_ssh":  fmt.Sprintf("git@%s.git", repoName),
+		"web_url":        fmt.Sprintf("https://%s", repoName),
 	}
-
-	opts.Context.Repository = &protoV1.Repository{
-		FullName:     repoName,
-		CloneUrlHttp: fmt.Sprintf("http://%s.git", repoName),
-		CloneUrlSsh:  fmt.Sprintf("git@%s.git", repoName),
-		WebUrl:       fmt.Sprintf("https://%s", repoName),
-	}
-	return context.WithValue(ctx, pluginOptsKey{}, opts), nil
+	pluginCtx["repository"] = repository
+	buf := &bytes.Buffer{}
+	enc := json.NewEncoder(buf)
+	err := enc.Encode(pluginCtx)
+	require.NoError(godog.T(ctx), err, "Encode plugin context to JSON")
+	flags["context"] = []string{buf.String()}
+	return context.WithValue(ctx, pluginFlagsKey{}, flags), nil
 }
 
 func theContentOfTemporaryFileMatches(ctx context.Context, fileName string, content *godog.DocString) error {
@@ -132,27 +120,31 @@ func theContentOfTemporaryFileMatches(ctx context.Context, fileName string, cont
 }
 
 func theContextContainsRunData(ctx context.Context, runDataRaw *godog.DocString) (context.Context, error) {
-	opts, ok := ctx.Value(pluginOptsKey{}).(command.ExecPluginOptions)
-	if !ok {
-		opts = command.ExecPluginOptions{}
-	}
+	flags := pluginFlags(ctx)
 
-	if opts.Context == nil {
-		opts.Context = &protoV1.Context{}
+	pluginCtx := make(map[string]any)
+	if len(flags["context"]) == 1 {
+		dec := json.NewDecoder(strings.NewReader(flags["context"][0]))
+		err := dec.Decode(&pluginCtx)
+		require.NoError(godog.T(ctx), err, "Decode plugin context from JSON")
 	}
 
 	runData := make(map[string]string)
 	dec := json.NewDecoder(strings.NewReader(runDataRaw.Content))
 	err := dec.Decode(&runData)
-	require.NoError(godog.T(ctx), err, "Successfully decodes run data")
-	opts.Context.RunData = runData
-
-	return context.WithValue(ctx, pluginOptsKey{}, opts), nil
+	require.NoError(godog.T(ctx), err, "Successfully decodes run data from input")
+	pluginCtx["run_data"] = runData
+	buf := &bytes.Buffer{}
+	enc := json.NewEncoder(buf)
+	err = enc.Encode(pluginCtx)
+	require.NoError(godog.T(ctx), err, "Encode plugin context to JSON")
+	flags["context"] = []string{buf.String()}
+	return context.WithValue(ctx, pluginFlagsKey{}, flags), nil
 }
 
 func theFileExistsWithContent(ctx context.Context, fileName string, fileContent *godog.DocString) error {
-	opts := ctx.Value(pluginOptsKey{}).(command.ExecPluginOptions)
-	path := filepath.Join(opts.WorkDir, fileName)
+	flags := ctx.Value(pluginFlagsKey{}).(map[string][]string)
+	path := filepath.Join(flags["workdir"][0], fileName)
 	b, err := os.ReadFile(path)
 	require.NoError(godog.T(ctx), err, "Reads file in repository checkout")
 	require.Equal(godog.T(ctx), fileContent.Content, string(b), "Creates file in repository checkout")
@@ -169,16 +161,23 @@ func theTemporaryFileIsDeleted(ctx context.Context, fileName string) error {
 }
 
 func thePluginConfiguration(ctx context.Context, configurationJSON *godog.DocString) (context.Context, error) {
-	opts, ok := ctx.Value(pluginOptsKey{}).(command.ExecPluginOptions)
+	flags, ok := ctx.Value(pluginFlagsKey{}).(map[string][]string)
 	if !ok {
-		opts = command.ExecPluginOptions{}
+		flags = make(map[string][]string)
 	}
 
-	opts.Config = make(map[string]string)
+	config := make(map[string]string)
 	dec := json.NewDecoder(strings.NewReader(configurationJSON.Content))
-	err := dec.Decode(&opts.Config)
+	err := dec.Decode(&config)
 	require.NoError(godog.T(ctx), err, "Successfully decodes plugin configuration")
-	return context.WithValue(ctx, pluginOptsKey{}, opts), nil
+
+	var configArgs []string
+	for k, v := range config {
+		configArgs = append(configArgs, fmt.Sprintf("%s=%s", k, v))
+	}
+
+	flags["config"] = configArgs
+	return context.WithValue(ctx, pluginFlagsKey{}, flags), nil
 }
 
 func theResponseShouldMatchJSON(ctx context.Context, payload *godog.DocString) error {
