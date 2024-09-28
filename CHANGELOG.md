@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.11.4](https://github.com/wndhydrnt/saturn-bot-protocol/compare/v0.11.3...v0.11.4) (2024-09-28)
+
+
+### Bug Fixes
+
+* **integration-test:** Verify streaming of stdout/stderr ([3b04ede](https://github.com/wndhydrnt/saturn-bot-protocol/commit/3b04ede8ef43bf97d2d368179dc441576e504dff))
+
 ## [0.11.3](https://github.com/wndhydrnt/saturn-bot-protocol/compare/v0.11.2...v0.11.3) (2024-09-19)
 
 
