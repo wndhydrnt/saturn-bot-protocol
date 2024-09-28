@@ -21,7 +21,8 @@ import (
 var pluginPath = flag.String("plugin-path", "", "Path to the plugin to test")
 var saturnBotPath = flag.String("saturn-bot-path", "saturn-bot", "Path to the binary of saturn-bot")
 
-type callResultKey struct{}
+type callResultStderrKey struct{}
+type callResultStdoutKey struct{}
 type pluginFlagsKey struct{}
 
 func pluginFlags(ctx context.Context) map[string][]string {
@@ -33,9 +34,9 @@ func pluginFlags(ctx context.Context) map[string][]string {
 	return flags
 }
 
-func executeSaturnBot(t godog.TestingT, cmdName string, flags map[string][]string) string {
+func executeSaturnBot(t godog.TestingT, cmdName string, flags map[string][]string) (string, string) {
 	flags["path"] = []string{*pluginPath}
-	args := []string{"plugin", cmdName}
+	args := []string{"plugin", cmdName, "--log-level", "debug", "--log-format", "json"}
 	for flagKey, flagValues := range flags {
 		for _, flagValue := range flagValues {
 			args = append(args, "--"+flagKey)
@@ -54,7 +55,7 @@ func executeSaturnBot(t godog.TestingT, cmdName string, flags map[string][]strin
 	if err != nil {
 		t.Fatalf("Command failed\n  Stderr: %s\n  Call: %s %s", stderrBuf.String(), *saturnBotPath, strings.Join(args, " "))
 	}
-	return stdoutBuf.String()
+	return stdoutBuf.String(), stderrBuf.String()
 }
 
 func applyIsCalled(ctx context.Context) (context.Context, error) {
@@ -62,13 +63,15 @@ func applyIsCalled(ctx context.Context) (context.Context, error) {
 	require.NoErrorf(godog.T(ctx), err, "Should create temporary working directory at %s", workDir)
 	flags := pluginFlags(ctx)
 	flags["workdir"] = []string{workDir}
-	result := executeSaturnBot(godog.T(ctx), "apply", flags)
-	return context.WithValue(ctx, callResultKey{}, result), nil
+	resultStdout, resultStderr := executeSaturnBot(godog.T(ctx), "apply", flags)
+	ctx = context.WithValue(ctx, callResultStdoutKey{}, resultStdout)
+	ctx = context.WithValue(ctx, callResultStderrKey{}, resultStderr)
+	return ctx, nil
 }
 
 func filterIsCalled(ctx context.Context) (context.Context, error) {
-	result := executeSaturnBot(godog.T(ctx), "filter", pluginFlags(ctx))
-	return context.WithValue(ctx, callResultKey{}, result), nil
+	result, _ := executeSaturnBot(godog.T(ctx), "filter", pluginFlags(ctx))
+	return context.WithValue(ctx, callResultStdoutKey{}, result), nil
 }
 
 func onPrClosedIsCalled(ctx context.Context) error {
@@ -151,6 +154,24 @@ func theFileExistsWithContent(ctx context.Context, fileName string, fileContent 
 	return nil
 }
 
+func theMessageIsWrittenToTheLog(ctx context.Context, msg string) error {
+	type logMessage struct {
+		Msg string `json:"msg"`
+	}
+
+	callResult := ctx.Value(callResultStderrKey{}).(string)
+	lines := strings.Split(callResult, "\n")
+	for _, line := range lines {
+		lmsg := logMessage{}
+		_ = json.Unmarshal([]byte(line), &lmsg)
+		if lmsg.Msg == msg {
+			return nil
+		}
+	}
+
+	return fmt.Errorf("Log message \"%s\" not found. Log output:\n%s", msg, callResult)
+}
+
 func theTemporaryFileIsDeleted(ctx context.Context, fileName string) error {
 	path := filepath.Join(os.TempDir(), fileName)
 	err := os.Remove(path)
@@ -181,7 +202,7 @@ func thePluginConfiguration(ctx context.Context, configurationJSON *godog.DocStr
 }
 
 func theResponseShouldMatchJSON(ctx context.Context, payload *godog.DocString) error {
-	callResult := ctx.Value(callResultKey{}).(string)
+	callResult := ctx.Value(callResultStdoutKey{}).(string)
 	require.JSONEq(godog.T(ctx), payload.Content, callResult, "Response is equal")
 	return nil
 }
@@ -199,6 +220,7 @@ func InitializeScenario(ctx *godog.ScenarioContext) {
 	ctx.Step(`^the temporary file "([^"]*)" is deleted$`, theTemporaryFileIsDeleted)
 	ctx.Step(`^the plugin configuration:$`, thePluginConfiguration)
 	ctx.Step(`^the response should match JSON:$`, theResponseShouldMatchJSON)
+	ctx.Step(`^the message "([^"]*)" is written to the log$`, theMessageIsWrittenToTheLog)
 }
 
 //go:embed features/*
