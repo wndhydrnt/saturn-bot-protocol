@@ -12,6 +12,7 @@ service PluginService {
   rpc OnPrClosed(OnPrClosedRequest) returns (OnPrClosedResponse) {}
   rpc OnPrCreated(OnPrCreatedRequest) returns (OnPrCreatedResponse) {}
   rpc OnPrMerged(OnPrMergedRequest) returns (OnPrMergedResponse) {}
+  rpc Shutdown(ShutdownRequest) returns (ShutdownResponse) {}
 }
 
 message ExecuteActionsRequest {
@@ -95,3 +96,7 @@ message OnPrMergedRequest {
 message OnPrMergedResponse {
   optional string error = 1;
 }
+
+message ShutdownRequest {}
+
+message ShutdownResponse {}

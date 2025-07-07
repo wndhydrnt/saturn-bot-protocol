@@ -207,6 +207,13 @@ func theResponseShouldMatchJSON(ctx context.Context, payload *godog.DocString) e
 	return nil
 }
 
+func shutdownIsCalled(ctx context.Context) (context.Context, error) {
+	resultStdout, resultStderr := executeSaturnBot(godog.T(ctx), "shutdown", pluginFlags(ctx))
+	ctx = context.WithValue(ctx, callResultStdoutKey{}, resultStdout)
+	ctx = context.WithValue(ctx, callResultStderrKey{}, resultStderr)
+	return ctx, nil
+}
+
 func InitializeScenario(ctx *godog.ScenarioContext) {
 	ctx.Step(`^Apply is called$`, applyIsCalled)
 	ctx.Step(`^Filter is called$`, filterIsCalled)
@@ -221,6 +228,7 @@ func InitializeScenario(ctx *godog.ScenarioContext) {
 	ctx.Step(`^the plugin configuration:$`, thePluginConfiguration)
 	ctx.Step(`^the response should match JSON:$`, theResponseShouldMatchJSON)
 	ctx.Step(`^the message "([^"]*)" is written to the log$`, theMessageIsWrittenToTheLog)
+	ctx.Step(`^Shutdown is called$`, shutdownIsCalled)
 }
 
 //go:embed features/*
