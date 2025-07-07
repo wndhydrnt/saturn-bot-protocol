@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.12.0](https://github.com/wndhydrnt/saturn-bot-protocol/compare/v0.11.4...v0.12.0) (2025-07-07)
+
+
+### Features
+
+* Add rpc method "Shutdown" ([2a289cf](https://github.com/wndhydrnt/saturn-bot-protocol/commit/2a289cf978c064b720722fe88c4aceec6c384870))
+
 ## [0.11.4](https://github.com/wndhydrnt/saturn-bot-protocol/compare/v0.11.3...v0.11.4) (2024-09-28)
 
 
